@@ -6,10 +6,13 @@ import java.text.DecimalFormat
 
 def decimalFormat = new DecimalFormat("#,###.00")
 
-def sql = Sql.newInstance('jdbc:postgresql://localhost:5432/postgres', 'admin', 'password', 'org.postgresql.Driver')
+def dbConnection = [url: 'jdbc:postgresql://localhost:5432/postgres', userName: 'admin', password: 'password', driverClassName: 'org.postgresql.Driver']
+
+def sql = Sql.newInstance(dbConnection.url, dbConnection.userName, dbConnection.password, dbConnection.driverClassName)
+
 println('Connected to db')
 
-def createTable = sql.execute("""
+sql.execute("""
 drop table if exists phones;
 create table phones(
     name varchar(25),
@@ -36,7 +39,7 @@ println(' Phone sale revenue '.center(PADDING_CHARACTERS, '='))
 println(System.lineSeparator())
 
 
-def itemCount = 0;
+def itemCount = 0
 
 //sql.eachRow("select concat_ws(' - ', name, manufacturer) as model, price * phones.units_sold as revenue from phones where manufacturer in ('Nokia', 'Apple');", {
 sql.eachRow("""
@@ -45,7 +48,7 @@ where units_sold between 2000 and 2400
    or manufacturer in ('Apple', 'Nokia') 
 order by revenue desc""",
         {
-            itemCount++;
+            itemCount++
             println(" Item ${itemCount} ".center(PADDING_CHARACTERS, '-'))
             println(it.model + " made a total of AUD " + decimalFormat.format(it.revenue))
             //    println("${it.name} - ${it.manufacturer} made a total of ${decimalFormat.format(it.revenue)}")
@@ -71,9 +74,11 @@ dataToBeDeleted.forEach {
 }
 
 sql.execute("""
-delete from phones where manufacturer = :manufacturer;""", [manufacturer: 'Samsung'])
+    delete from phones where manufacturer = :manufacturer;
+    """, [manufacturer: 'Samsung'])
 
 sql.eachRow("""select * from phones;""", {
     println "${it.name} ${it.manufacturer}"
 })
 
+sql.close()
