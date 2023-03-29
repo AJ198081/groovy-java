@@ -8,7 +8,7 @@ def sql = Sql.newInstance(credentials.url, credentials.userName, credentials.pas
 println("Connected to ${credentials.url}")
 
 sql.execute("""
-    drop table if exists users;
+    drop table if exists users CASCADE;
 
     CREATE TABLE users (
         id SERIAL PRIMARY KEY NOT NULL,
@@ -16,6 +16,8 @@ sql.execute("""
  	   );
  	   """
 )
+
+Thread.sleep(5000)
 
 def usernames = ['AJ', 'Dippi', 'Reet', 'Zoravar']
 
@@ -25,4 +27,8 @@ usernames.forEach {
     """)
 }
 
+// Will throw constraint violation exception as will leave orphaned children, unless ON DELETE constraint is defined
+//sql.execute("DELETE FROM users where id = 4")
+
+sql.close()
 

@@ -7,20 +7,32 @@ def credentials = DBConnectionProperties.getConnectionCredentials()
 def sql = Sql.newInstance(credentials.url, credentials.userName, credentials.password, credentials.driverClassName)
 println("Connected to ${credentials.url}")
 
-sql.execute("""
+/*sql.execute("""
 	drop table if exists photos;
+
 	CREATE TABLE photos (
 	    id SERIAL PRIMARY KEY NOT NULL,
 	    url varchar(200),
-	    user_id INTEGER REFERENCES users(id)
-	)
+	    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE default null)
+""")*/
+
+// ON DELETE CASCADE or ON DELETE SET NULL are two common scenarios
+sql.execute("""
+	drop table if exists photos;
+
+	CREATE TABLE photos (
+	    id SERIAL PRIMARY KEY NOT NULL,
+	    url varchar(200),
+	    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL default null)
 """)
 
 def photosDetails = [
         [url: 'http://AJ.jpg' , user_id: 1],
         [url: 'http://dippi.jpg', user_id: 2],
         [url: 'http://Reet.jpg', user_id: 3],
-        [url: 'http://Zoravar.jpg', user_id: 4]
+        [url: 'http://Zoravar.jpg', user_id: 4],
+		[url: 'http://dummy.jpg'],
+        [url: 'http:/one.jpg', user_id: 4]
 ]
 
 photosDetails.forEach {
@@ -35,3 +47,4 @@ sql.eachRow("""
 	println("User ${it.username}'s photo can be located at ${it.url}")
 })
 
+sql.close()

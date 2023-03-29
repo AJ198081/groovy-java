@@ -1,16 +1,14 @@
+
 package dev.aj.groovyjava.db
-
 import groovy.sql.Sql
-
 import java.text.DecimalFormat
 
 def decimalFormat = new DecimalFormat("#,###.00")
-
 def dbConnection = [url: 'jdbc:postgresql://localhost:5432/postgres', userName: 'admin', password: 'password', driverClassName: 'org.postgresql.Driver']
-
 def sql = Sql.newInstance(dbConnection.url, dbConnection.userName, dbConnection.password, dbConnection.driverClassName)
-
 println('Connected to db')
+
+final PADDING_CHARACTERS = 45
 
 sql.execute("""
 drop table if exists phones;
@@ -34,10 +32,9 @@ data.forEach {
     insert into phones (name, manufacturer, price, units_sold) values (${it.name}, ${it.manufacturer}, ${it.price}, ${it.units_sold});
 """)
 }
-final PADDING_CHARACTERS = 45
+
 println(' Phone sale revenue '.center(PADDING_CHARACTERS, '='))
 println(System.lineSeparator())
-
 
 def itemCount = 0
 
