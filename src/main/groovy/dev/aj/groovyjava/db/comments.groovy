@@ -8,6 +8,7 @@ def sql = Sql.newInstance(credentials.url, credentials.userName, credentials.pas
 println("Connected to ${credentials.url}")
 
 sql.execute("""
+	DROP TABLE IF EXISTS comments;
 	CREATE TABLE comments(
 	    id SERIAL PRIMARY KEY,
 	    contents VARCHAR(240),

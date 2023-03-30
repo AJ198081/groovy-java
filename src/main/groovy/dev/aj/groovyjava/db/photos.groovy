@@ -32,7 +32,7 @@ def photosDetails = [
         [url: 'http://Reet.jpg', user_id: 3],
         [url: 'http://Zoravar.jpg', user_id: 4],
 		[url: 'http://dummy.jpg'],
-        [url: 'http:/one.jpg', user_id: 4]
+        [url: 'http://one.jpg', user_id: 4]
 ]
 
 photosDetails.forEach {
