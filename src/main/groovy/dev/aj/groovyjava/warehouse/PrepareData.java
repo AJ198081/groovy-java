@@ -31,10 +31,14 @@ public class PrepareData {
 
     private LinkedHashMap<String, String> getProductFromString(String[] listItem) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("name", listItem[0]);
-        map.put("department", listItem[1]);
+        map.put("name", removeInvertedCommas(listItem[0]));
+        map.put("department", removeInvertedCommas(listItem[1]));
         map.put("price", listItem[2]);
         map.put("weight", listItem[3]);
         return map;
+    }
+
+    private String removeInvertedCommas(String text) {
+       return text.startsWith("'") && text.endsWith("'") ? text.substring(text.indexOf("'") + 1, text.lastIndexOf("'")) : text;
     }
 }

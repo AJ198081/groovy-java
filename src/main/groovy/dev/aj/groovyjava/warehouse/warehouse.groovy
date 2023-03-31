@@ -3,13 +3,24 @@ package dev.aj.groovyjava.warehouse
 import dev.aj.groovyjava.db.DBConnectionProperties
 import groovy.sql.Sql
 
+import java.text.NumberFormat
+
 def credentials = DBConnectionProperties.getConnectionCredentials()
 
+def usersData = DataBase.getUserData()
+def productsData = new PrepareData().getProductData()
+def ordersData = DataBase.getOrders()
+
+def integerFormat = NumberFormat.getIntegerInstance(Locale.ENGLISH)
+
+void tableEncapsulate(String textContents, Integer characterWidth, String paddingCharacter) {
+	def textBody = new StringBuffer().append(' ').append(textContents).append(' ')
+	println(textBody.center(characterWidth, paddingCharacter))
+}
 def sql = Sql.newInstance(credentials.url.concat('?currentSchema=warehouse'), credentials.userName, credentials.password, credentials.driverClassName)
 println('Connected')
 
 sql.execute("""
-
 	Drop TABLE if exists users cascade;
 	Drop TABLE if exists products cascade;
 	Drop TABLE if exists orders;
@@ -35,614 +46,6 @@ sql.execute("""
 	);
 """)
 
-def usersData = [
-		[first_name: 'Iva', last_name: 'Lindgren'],
-		[first_name: 'Jannie', last_name: 'Boehm'],
-		[first_name: 'Neal', last_name: 'Wehner'],
-		[first_name: 'Mikayla', last_name: 'Casper'],
-		[first_name: 'Patience', last_name: 'Stracke'],
-		[first_name: 'Josianne', last_name: 'Gerhold'],
-		[first_name: 'Kailee', last_name: 'Jacobson'],
-		[first_name: 'Marlen', last_name: 'Hickle'],
-		[first_name: 'Pansy', last_name: 'Daugherty'],
-		[first_name: 'Vinnie', last_name: 'Feest'],
-		[first_name: 'Cierra', last_name: 'Johns'],
-		[first_name: 'Violette', last_name: 'Heathcote'],
-		[first_name: 'Stan', last_name: 'Rath'],
-		[first_name: 'Neha', last_name: 'Hyatt'],
-		[first_name: 'Kaylah', last_name: 'Gleason'],
-		[first_name: 'Jacky', last_name: 'Hegmann'],
-		[first_name: 'Duane', last_name: 'Lockman'],
-		[first_name: 'Sonya', last_name: 'Marquardt'],
-		[first_name: 'Brenden', last_name: 'Streich'],
-		[first_name: 'Laurianne', last_name: 'Douglas'],
-		[first_name: 'Orlando', last_name: 'Kerluke'],
-		[first_name: 'Irma', last_name: 'Wintheiser'],
-		[first_name: 'Cletus', last_name: 'Schultz'],
-		[first_name: 'Jermaine', last_name: 'Langosh'],
-		[first_name: 'Alexanne', last_name: 'Dickens'],
-		[first_name: 'Garret', last_name: 'Williamson'],
-		[first_name: 'Max', last_name: 'Goodwin'],
-		[first_name: 'Tad', last_name: 'Wilderman'],
-		[first_name: 'Lindsay', last_name: 'Yost'],
-		[first_name: 'Elliot', last_name: 'Oberbrunner'],
-		[first_name: 'Brendan', last_name: 'Thompson'],
-		[first_name: 'Brennan', last_name: 'Auer'],
-		[first_name: 'Luigi', last_name: 'Johnston'],
-		[first_name: 'Garth', last_name: 'McLaughlin'],
-		[first_name: 'Ressie', last_name: 'Nikolaus'],
-		[first_name: 'Ruby', last_name: 'Turner'],
-		[first_name: 'Caden', last_name: 'Turcotte'],
-		[first_name: 'Armand', last_name: 'Kshlerin'],
-		[first_name: 'Albertha', last_name: 'Yundt'],
-		[first_name: 'Kathryn', last_name: 'Mueller'],
-		[first_name: 'Arely', last_name: 'McGlynn'],
-		[first_name: 'Lawrence', last_name: 'Casper'],
-		[first_name: 'Johathan', last_name: 'Kirlin'],
-		[first_name: 'Clara', last_name: 'Gerhold'],
-		[first_name: 'Miller', last_name: 'Feil'],
-		[first_name: 'Rosendo', last_name: 'Sawayn'],
-		[first_name: 'Sally', last_name: 'Mann'],
-		[first_name: 'Kennith', last_name: 'Hettinger'],
-		[first_name: 'Mathilde', last_name: 'Eichmann'],
-		[first_name: 'AJ', last_name: 'Bhandal']
-]
-
-def productsData = new PrepareData().getProductData()
-
-def ordersData = [
-		[user_id: 41, product_id: 100, paid: true],
-		[user_id: 27, product_id: 99, paid: false],
-		[user_id: 50, product_id: 72, paid: false],
-		[user_id: 24, product_id: 81, paid: true],
-		[user_id: 24, product_id: 54, paid: true],
-		[user_id: 1, product_id: 6, paid: true],
-		[user_id: 17, product_id: 25, paid: false],
-		[user_id: 8, product_id: 5, paid: true],
-		[user_id: 34, product_id: 3, paid: true],
-		[user_id: 41, product_id: 19, paid: true],
-		[user_id: 15, product_id: 23, paid: true],
-		[user_id: 23, product_id: 60, paid: true],
-		[user_id: 31, product_id: 44, paid: true],
-		[user_id: 46, product_id: 34, paid: false],
-		[user_id: 11, product_id: 76, paid: false],
-		[user_id: 44, product_id: 74, paid: true],
-		[user_id: 18, product_id: 58, paid: true],
-		[user_id: 40, product_id: 1, paid: false],
-		[user_id: 41, product_id: 22, paid: true],
-		[user_id: 10, product_id: 20, paid: false],
-		[user_id: 50, product_id: 49, paid: false],
-		[user_id: 14, product_id: 30, paid: true],
-		[user_id: 4, product_id: 38, paid: false],
-		[user_id: 42, product_id: 34, paid: true],
-		[user_id: 22, product_id: 16, paid: false],
-		[user_id: 4, product_id: 89, paid: true],
-		[user_id: 49, product_id: 18, paid: true],
-		[user_id: 35, product_id: 30, paid: true],
-		[user_id: 7, product_id: 59, paid: false],
-		[user_id: 31, product_id: 25, paid: true],
-		[user_id: 43, product_id: 16, paid: false],
-		[user_id: 18, product_id: 27, paid: false],
-		[user_id: 47, product_id: 91, paid: true],
-		[user_id: 32, product_id: 22, paid: false],
-		[user_id: 5, product_id: 11, paid: false],
-		[user_id: 14, product_id: 68, paid: false],
-		[user_id: 19, product_id: 8, paid: false],
-		[user_id: 43, product_id: 74, paid: true],
-		[user_id: 29, product_id: 1, paid: false],
-		[user_id: 7, product_id: 6, paid: true],
-		[user_id: 16, product_id: 3, paid: true],
-		[user_id: 29, product_id: 15, paid: false],
-		[user_id: 25, product_id: 80, paid: true],
-		[user_id: 5, product_id: 15, paid: true],
-		[user_id: 23, product_id: 9, paid: true],
-		[user_id: 20, product_id: 28, paid: false],
-		[user_id: 18, product_id: 21, paid: true],
-		[user_id: 34, product_id: 27, paid: false],
-		[user_id: 33, product_id: 44, paid: true],
-		[user_id: 26, product_id: 18, paid: false],
-		[user_id: 10, product_id: 42, paid: false],
-		[user_id: 49, product_id: 47, paid: true],
-		[user_id: 4, product_id: 87, paid: true],
-		[user_id: 8, product_id: 82, paid: true],
-		[user_id: 32, product_id: 96, paid: true],
-		[user_id: 3, product_id: 88, paid: true],
-		[user_id: 2, product_id: 8, paid: true],
-		[user_id: 49, product_id: 25, paid: false],
-		[user_id: 3, product_id: 34, paid: true],
-		[user_id: 38, product_id: 81, paid: false],
-		[user_id: 41, product_id: 69, paid: true],
-		[user_id: 50, product_id: 19, paid: true],
-		[user_id: 44, product_id: 44, paid: false],
-		[user_id: 20, product_id: 52, paid: false],
-		[user_id: 16, product_id: 44, paid: false],
-		[user_id: 50, product_id: 62, paid: false],
-		[user_id: 47, product_id: 4, paid: false],
-		[user_id: 4, product_id: 2, paid: true],
-		[user_id: 36, product_id: 56, paid: true],
-		[user_id: 49, product_id: 18, paid: true],
-		[user_id: 20, product_id: 63, paid: true],
-		[user_id: 18, product_id: 44, paid: true],
-		[user_id: 30, product_id: 69, paid: true],
-		[user_id: 33, product_id: 52, paid: true],
-		[user_id: 18, product_id: 1, paid: true],
-		[user_id: 39, product_id: 94, paid: true],
-		[user_id: 39, product_id: 53, paid: true],
-		[user_id: 31, product_id: 75, paid: true],
-		[user_id: 39, product_id: 64, paid: false],
-		[user_id: 33, product_id: 46, paid: false],
-		[user_id: 16, product_id: 43, paid: false],
-		[user_id: 41, product_id: 41, paid: false],
-		[user_id: 33, product_id: 77, paid: true],
-		[user_id: 8, product_id: 95, paid: false],
-		[user_id: 16, product_id: 75, paid: false],
-		[user_id: 4, product_id: 12, paid: false],
-		[user_id: 14, product_id: 4, paid: true],
-		[user_id: 31, product_id: 90, paid: true],
-		[user_id: 30, product_id: 77, paid: true],
-		[user_id: 44, product_id: 53, paid: false],
-		[user_id: 34, product_id: 70, paid: true],
-		[user_id: 23, product_id: 76, paid: false],
-		[user_id: 22, product_id: 87, paid: false],
-		[user_id: 45, product_id: 15, paid: true],
-		[user_id: 14, product_id: 15, paid: true],
-		[user_id: 6, product_id: 11, paid: true],
-		[user_id: 3, product_id: 84, paid: false],
-		[user_id: 25, product_id: 89, paid: true],
-		[user_id: 5, product_id: 66, paid: true],
-		[user_id: 40, product_id: 70, paid: false],
-		[user_id: 10, product_id: 95, paid: true],
-		[user_id: 22, product_id: 39, paid: true],
-		[user_id: 13, product_id: 13, paid: false],
-		[user_id: 12, product_id: 46, paid: false],
-		[user_id: 28, product_id: 77, paid: false],
-		[user_id: 14, product_id: 67, paid: false],
-		[user_id: 11, product_id: 52, paid: false],
-		[user_id: 11, product_id: 6, paid: false],
-		[user_id: 32, product_id: 17, paid: true],
-		[user_id: 40, product_id: 79, paid: true],
-		[user_id: 5, product_id: 84, paid: true],
-		[user_id: 38, product_id: 67, paid: false],
-		[user_id: 45, product_id: 8, paid: false],
-		[user_id: 21, product_id: 90, paid: true],
-		[user_id: 38, product_id: 9, paid: true],
-		[user_id: 23, product_id: 33, paid: false],
-		[user_id: 14, product_id: 32, paid: false],
-		[user_id: 47, product_id: 71, paid: false],
-		[user_id: 15, product_id: 63, paid: true],
-		[user_id: 12, product_id: 13, paid: true],
-		[user_id: 32, product_id: 76, paid: true],
-		[user_id: 17, product_id: 23, paid: true],
-		[user_id: 48, product_id: 20, paid: false],
-		[user_id: 25, product_id: 29, paid: true],
-		[user_id: 20, product_id: 18, paid: true],
-		[user_id: 49, product_id: 6, paid: true],
-		[user_id: 28, product_id: 97, paid: false],
-		[user_id: 2, product_id: 29, paid: true],
-		[user_id: 36, product_id: 96, paid: false],
-		[user_id: 13, product_id: 99, paid: false],
-		[user_id: 36, product_id: 70, paid: false],
-		[user_id: 34, product_id: 38, paid: true],
-		[user_id: 15, product_id: 11, paid: false],
-		[user_id: 19, product_id: 17, paid: false],
-		[user_id: 32, product_id: 73, paid: true],
-		[user_id: 45, product_id: 27, paid: true],
-		[user_id: 34, product_id: 86, paid: false],
-		[user_id: 27, product_id: 68, paid: true],
-		[user_id: 49, product_id: 90, paid: false],
-		[user_id: 10, product_id: 60, paid: true],
-		[user_id: 31, product_id: 84, paid: false],
-		[user_id: 35, product_id: 83, paid: false],
-		[user_id: 28, product_id: 43, paid: false],
-		[user_id: 39, product_id: 95, paid: false],
-		[user_id: 11, product_id: 53, paid: true],
-		[user_id: 8, product_id: 89, paid: true],
-		[user_id: 23, product_id: 7, paid: true],
-		[user_id: 39, product_id: 42, paid: false],
-		[user_id: 41, product_id: 60, paid: false],
-		[user_id: 25, product_id: 18, paid: true],
-		[user_id: 38, product_id: 88, paid: false],
-		[user_id: 47, product_id: 69, paid: true],
-		[user_id: 15, product_id: 13, paid: true],
-		[user_id: 37, product_id: 35, paid: false],
-		[user_id: 37, product_id: 52, paid: true],
-		[user_id: 12, product_id: 80, paid: false],
-		[user_id: 39, product_id: 40, paid: true],
-		[user_id: 28, product_id: 23, paid: false],
-		[user_id: 3, product_id: 58, paid: false],
-		[user_id: 33, product_id: 92, paid: false],
-		[user_id: 38, product_id: 51, paid: true],
-		[user_id: 18, product_id: 15, paid: false],
-		[user_id: 25, product_id: 57, paid: false],
-		[user_id: 46, product_id: 28, paid: false],
-		[user_id: 42, product_id: 49, paid: true],
-		[user_id: 31, product_id: 5, paid: true],
-		[user_id: 37, product_id: 29, paid: false],
-		[user_id: 4, product_id: 64, paid: true],
-		[user_id: 23, product_id: 12, paid: false],
-		[user_id: 37, product_id: 93, paid: true],
-		[user_id: 13, product_id: 46, paid: true],
-		[user_id: 4, product_id: 95, paid: false],
-		[user_id: 44, product_id: 59, paid: true],
-		[user_id: 39, product_id: 72, paid: false],
-		[user_id: 28, product_id: 44, paid: true],
-		[user_id: 3, product_id: 55, paid: false],
-		[user_id: 17, product_id: 36, paid: false],
-		[user_id: 7, product_id: 40, paid: false],
-		[user_id: 4, product_id: 69, paid: true],
-		[user_id: 39, product_id: 22, paid: true],
-		[user_id: 25, product_id: 2, paid: false],
-		[user_id: 21, product_id: 88, paid: false],
-		[user_id: 13, product_id: 1, paid: true],
-		[user_id: 34, product_id: 76, paid: false],
-		[user_id: 9, product_id: 19, paid: true],
-		[user_id: 43, product_id: 95, paid: false],
-		[user_id: 42, product_id: 16, paid: false],
-		[user_id: 50, product_id: 35, paid: false],
-		[user_id: 7, product_id: 61, paid: false],
-		[user_id: 16, product_id: 17, paid: true],
-		[user_id: 45, product_id: 25, paid: true],
-		[user_id: 36, product_id: 53, paid: true],
-		[user_id: 5, product_id: 85, paid: false],
-		[user_id: 1, product_id: 27, paid: true],
-		[user_id: 29, product_id: 29, paid: true],
-		[user_id: 14, product_id: 41, paid: true],
-		[user_id: 1, product_id: 95, paid: true],
-		[user_id: 2, product_id: 1, paid: true],
-		[user_id: 43, product_id: 63, paid: true],
-		[user_id: 6, product_id: 36, paid: true],
-		[user_id: 34, product_id: 26, paid: true],
-		[user_id: 35, product_id: 52, paid: false],
-		[user_id: 14, product_id: 92, paid: true],
-		[user_id: 18, product_id: 100, paid: true],
-		[user_id: 13, product_id: 17, paid: true],
-		[user_id: 25, product_id: 69, paid: false],
-		[user_id: 45, product_id: 3, paid: false],
-		[user_id: 37, product_id: 85, paid: false],
-		[user_id: 44, product_id: 87, paid: false],
-		[user_id: 36, product_id: 1, paid: true],
-		[user_id: 15, product_id: 68, paid: false],
-		[user_id: 12, product_id: 30, paid: true],
-		[user_id: 22, product_id: 41, paid: false],
-		[user_id: 16, product_id: 26, paid: true],
-		[user_id: 34, product_id: 46, paid: false],
-		[user_id: 33, product_id: 33, paid: false],
-		[user_id: 31, product_id: 31, paid: false],
-		[user_id: 41, product_id: 75, paid: true],
-		[user_id: 32, product_id: 66, paid: false],
-		[user_id: 11, product_id: 30, paid: true],
-		[user_id: 29, product_id: 20, paid: false],
-		[user_id: 16, product_id: 13, paid: false],
-		[user_id: 39, product_id: 79, paid: false],
-		[user_id: 45, product_id: 94, paid: false],
-		[user_id: 9, product_id: 96, paid: false],
-		[user_id: 36, product_id: 47, paid: false],
-		[user_id: 2, product_id: 34, paid: true],
-		[user_id: 43, product_id: 38, paid: true],
-		[user_id: 27, product_id: 6, paid: true],
-		[user_id: 19, product_id: 55, paid: true],
-		[user_id: 29, product_id: 48, paid: false],
-		[user_id: 45, product_id: 85, paid: false],
-		[user_id: 18, product_id: 38, paid: false],
-		[user_id: 1, product_id: 15, paid: true],
-		[user_id: 13, product_id: 25, paid: false],
-		[user_id: 14, product_id: 10, paid: false],
-		[user_id: 31, product_id: 28, paid: false],
-		[user_id: 20, product_id: 85, paid: false],
-		[user_id: 18, product_id: 88, paid: true],
-		[user_id: 8, product_id: 8, paid: false],
-		[user_id: 24, product_id: 58, paid: false],
-		[user_id: 24, product_id: 48, paid: true],
-		[user_id: 24, product_id: 68, paid: false],
-		[user_id: 29, product_id: 87, paid: true],
-		[user_id: 6, product_id: 36, paid: true],
-		[user_id: 46, product_id: 51, paid: true],
-		[user_id: 20, product_id: 21, paid: false],
-		[user_id: 18, product_id: 40, paid: true],
-		[user_id: 36, product_id: 12, paid: false],
-		[user_id: 22, product_id: 54, paid: true],
-		[user_id: 22, product_id: 10, paid: true],
-		[user_id: 20, product_id: 13, paid: false],
-		[user_id: 2, product_id: 33, paid: true],
-		[user_id: 20, product_id: 46, paid: true],
-		[user_id: 48, product_id: 37, paid: true],
-		[user_id: 41, product_id: 2, paid: false],
-		[user_id: 2, product_id: 53, paid: true],
-		[user_id: 45, product_id: 87, paid: false],
-		[user_id: 5, product_id: 35, paid: false],
-		[user_id: 28, product_id: 46, paid: false],
-		[user_id: 42, product_id: 79, paid: true],
-		[user_id: 27, product_id: 45, paid: false],
-		[user_id: 11, product_id: 21, paid: false],
-		[user_id: 36, product_id: 96, paid: false],
-		[user_id: 35, product_id: 59, paid: true],
-		[user_id: 30, product_id: 92, paid: true],
-		[user_id: 17, product_id: 28, paid: false],
-		[user_id: 28, product_id: 28, paid: true],
-		[user_id: 23, product_id: 43, paid: true],
-		[user_id: 44, product_id: 24, paid: false],
-		[user_id: 26, product_id: 98, paid: false],
-		[user_id: 36, product_id: 51, paid: false],
-		[user_id: 1, product_id: 66, paid: false],
-		[user_id: 47, product_id: 92, paid: false],
-		[user_id: 1, product_id: 36, paid: false],
-		[user_id: 9, product_id: 8, paid: false],
-		[user_id: 42, product_id: 97, paid: true],
-		[user_id: 32, product_id: 38, paid: false],
-		[user_id: 17, product_id: 60, paid: true],
-		[user_id: 14, product_id: 24, paid: true],
-		[user_id: 43, product_id: 14, paid: true],
-		[user_id: 47, product_id: 21, paid: true],
-		[user_id: 38, product_id: 46, paid: true],
-		[user_id: 22, product_id: 75, paid: false],
-		[user_id: 19, product_id: 47, paid: true],
-		[user_id: 10, product_id: 37, paid: true],
-		[user_id: 9, product_id: 11, paid: true],
-		[user_id: 44, product_id: 56, paid: true],
-		[user_id: 50, product_id: 6, paid: true],
-		[user_id: 21, product_id: 99, paid: false],
-		[user_id: 34, product_id: 4, paid: true],
-		[user_id: 5, product_id: 37, paid: false],
-		[user_id: 8, product_id: 11, paid: false],
-		[user_id: 12, product_id: 66, paid: false],
-		[user_id: 21, product_id: 74, paid: true],
-		[user_id: 38, product_id: 53, paid: false],
-		[user_id: 24, product_id: 54, paid: false],
-		[user_id: 33, product_id: 85, paid: true],
-		[user_id: 9, product_id: 57, paid: false],
-		[user_id: 20, product_id: 71, paid: true],
-		[user_id: 21, product_id: 4, paid: false],
-		[user_id: 38, product_id: 96, paid: false],
-		[user_id: 35, product_id: 50, paid: false],
-		[user_id: 16, product_id: 89, paid: false],
-		[user_id: 45, product_id: 95, paid: true],
-		[user_id: 33, product_id: 92, paid: false],
-		[user_id: 41, product_id: 87, paid: false],
-		[user_id: 25, product_id: 15, paid: false],
-		[user_id: 42, product_id: 86, paid: false],
-		[user_id: 2, product_id: 68, paid: false],
-		[user_id: 5, product_id: 85, paid: true],
-		[user_id: 42, product_id: 43, paid: false],
-		[user_id: 15, product_id: 8, paid: true],
-		[user_id: 13, product_id: 3, paid: true],
-		[user_id: 24, product_id: 86, paid: false],
-		[user_id: 34, product_id: 66, paid: false],
-		[user_id: 35, product_id: 98, paid: false],
-		[user_id: 48, product_id: 90, paid: false],
-		[user_id: 34, product_id: 97, paid: false],
-		[user_id: 48, product_id: 36, paid: true],
-		[user_id: 21, product_id: 31, paid: false],
-		[user_id: 40, product_id: 93, paid: false],
-		[user_id: 26, product_id: 89, paid: true],
-		[user_id: 47, product_id: 15, paid: true],
-		[user_id: 27, product_id: 24, paid: true],
-		[user_id: 30, product_id: 34, paid: false],
-		[user_id: 44, product_id: 23, paid: true],
-		[user_id: 17, product_id: 54, paid: true],
-		[user_id: 31, product_id: 42, paid: false],
-		[user_id: 42, product_id: 32, paid: false],
-		[user_id: 20, product_id: 55, paid: true],
-		[user_id: 2, product_id: 80, paid: true],
-		[user_id: 30, product_id: 70, paid: true],
-		[user_id: 24, product_id: 18, paid: true],
-		[user_id: 5, product_id: 96, paid: false],
-		[user_id: 50, product_id: 31, paid: false],
-		[user_id: 35, product_id: 98, paid: true],
-		[user_id: 41, product_id: 30, paid: false],
-		[user_id: 48, product_id: 22, paid: true],
-		[user_id: 19, product_id: 31, paid: false],
-		[user_id: 34, product_id: 33, paid: false],
-		[user_id: 19, product_id: 58, paid: false],
-		[user_id: 26, product_id: 72, paid: false],
-		[user_id: 34, product_id: 59, paid: true],
-		[user_id: 8, product_id: 39, paid: true],
-		[user_id: 40, product_id: 73, paid: false],
-		[user_id: 44, product_id: 56, paid: false],
-		[user_id: 36, product_id: 91, paid: true],
-		[user_id: 33, product_id: 56, paid: false],
-		[user_id: 36, product_id: 90, paid: true],
-		[user_id: 28, product_id: 22, paid: false],
-		[user_id: 49, product_id: 70, paid: true],
-		[user_id: 19, product_id: 14, paid: true],
-		[user_id: 39, product_id: 59, paid: false],
-		[user_id: 17, product_id: 39, paid: false],
-		[user_id: 40, product_id: 72, paid: true],
-		[user_id: 21, product_id: 96, paid: false],
-		[user_id: 3, product_id: 66, paid: true],
-		[user_id: 23, product_id: 6, paid: true],
-		[user_id: 6, product_id: 6, paid: false],
-		[user_id: 18, product_id: 52, paid: true],
-		[user_id: 48, product_id: 87, paid: true],
-		[user_id: 40, product_id: 83, paid: true],
-		[user_id: 23, product_id: 10, paid: true],
-		[user_id: 21, product_id: 6, paid: false],
-		[user_id: 24, product_id: 63, paid: true],
-		[user_id: 18, product_id: 67, paid: false],
-		[user_id: 35, product_id: 47, paid: false],
-		[user_id: 26, product_id: 62, paid: false],
-		[user_id: 14, product_id: 37, paid: false],
-		[user_id: 9, product_id: 51, paid: false],
-		[user_id: 1, product_id: 51, paid: true],
-		[user_id: 35, product_id: 29, paid: false],
-		[user_id: 49, product_id: 66, paid: true],
-		[user_id: 45, product_id: 47, paid: false],
-		[user_id: 26, product_id: 52, paid: false],
-		[user_id: 31, product_id: 60, paid: false],
-		[user_id: 4, product_id: 89, paid: false],
-		[user_id: 43, product_id: 46, paid: true],
-		[user_id: 16, product_id: 23, paid: false],
-		[user_id: 37, product_id: 97, paid: true],
-		[user_id: 47, product_id: 70, paid: false],
-		[user_id: 22, product_id: 88, paid: false],
-		[user_id: 21, product_id: 45, paid: true],
-		[user_id: 46, product_id: 25, paid: true],
-		[user_id: 36, product_id: 80, paid: true],
-		[user_id: 42, product_id: 20, paid: true],
-		[user_id: 14, product_id: 5, paid: false],
-		[user_id: 10, product_id: 65, paid: false],
-		[user_id: 14, product_id: 30, paid: false],
-		[user_id: 1, product_id: 37, paid: false],
-		[user_id: 2, product_id: 22, paid: true],
-		[user_id: 41, product_id: 3, paid: true],
-		[user_id: 47, product_id: 17, paid: true],
-		[user_id: 34, product_id: 50, paid: true],
-		[user_id: 23, product_id: 60, paid: false],
-		[user_id: 13, product_id: 29, paid: true],
-		[user_id: 18, product_id: 16, paid: true],
-		[user_id: 23, product_id: 91, paid: true],
-		[user_id: 46, product_id: 68, paid: false],
-		[user_id: 3, product_id: 87, paid: false],
-		[user_id: 31, product_id: 52, paid: false],
-		[user_id: 49, product_id: 23, paid: false],
-		[user_id: 50, product_id: 75, paid: true],
-		[user_id: 20, product_id: 43, paid: true],
-		[user_id: 13, product_id: 100, paid: false],
-		[user_id: 14, product_id: 6, paid: false],
-		[user_id: 19, product_id: 99, paid: true],
-		[user_id: 45, product_id: 82, paid: true],
-		[user_id: 41, product_id: 66, paid: true],
-		[user_id: 9, product_id: 39, paid: true],
-		[user_id: 18, product_id: 41, paid: true],
-		[user_id: 47, product_id: 17, paid: false],
-		[user_id: 25, product_id: 100, paid: true],
-		[user_id: 49, product_id: 57, paid: false],
-		[user_id: 41, product_id: 15, paid: false],
-		[user_id: 22, product_id: 41, paid: false],
-		[user_id: 15, product_id: 1, paid: true],
-		[user_id: 29, product_id: 96, paid: true],
-		[user_id: 2, product_id: 78, paid: true],
-		[user_id: 4, product_id: 87, paid: true],
-		[user_id: 22, product_id: 99, paid: true],
-		[user_id: 41, product_id: 7, paid: false],
-		[user_id: 6, product_id: 98, paid: true],
-		[user_id: 41, product_id: 20, paid: false],
-		[user_id: 25, product_id: 17, paid: false],
-		[user_id: 21, product_id: 54, paid: true],
-		[user_id: 48, product_id: 64, paid: true],
-		[user_id: 4, product_id: 29, paid: false],
-		[user_id: 46, product_id: 98, paid: true],
-		[user_id: 23, product_id: 66, paid: true],
-		[user_id: 35, product_id: 64, paid: true],
-		[user_id: 37, product_id: 98, paid: false],
-		[user_id: 30, product_id: 84, paid: false],
-		[user_id: 8, product_id: 24, paid: false],
-		[user_id: 12, product_id: 56, paid: true],
-		[user_id: 7, product_id: 23, paid: true],
-		[user_id: 25, product_id: 31, paid: true],
-		[user_id: 25, product_id: 46, paid: false],
-		[user_id: 49, product_id: 80, paid: false],
-		[user_id: 29, product_id: 97, paid: false],
-		[user_id: 30, product_id: 60, paid: true],
-		[user_id: 50, product_id: 37, paid: true],
-		[user_id: 42, product_id: 48, paid: false],
-		[user_id: 44, product_id: 24, paid: true],
-		[user_id: 34, product_id: 93, paid: true],
-		[user_id: 7, product_id: 44, paid: true],
-		[user_id: 34, product_id: 13, paid: true],
-		[user_id: 37, product_id: 47, paid: false],
-		[user_id: 40, product_id: 12, paid: false],
-		[user_id: 43, product_id: 76, paid: true],
-		[user_id: 41, product_id: 2, paid: false],
-		[user_id: 12, product_id: 22, paid: true],
-		[user_id: 2, product_id: 75, paid: true],
-		[user_id: 19, product_id: 18, paid: false],
-		[user_id: 31, product_id: 39, paid: true],
-		[user_id: 20, product_id: 72, paid: true],
-		[user_id: 25, product_id: 15, paid: false],
-		[user_id: 42, product_id: 34, paid: false],
-		[user_id: 33, product_id: 13, paid: false],
-		[user_id: 40, product_id: 8, paid: true],
-		[user_id: 5, product_id: 33, paid: true],
-		[user_id: 44, product_id: 28, paid: true],
-		[user_id: 29, product_id: 5, paid: true],
-		[user_id: 37, product_id: 88, paid: false],
-		[user_id: 44, product_id: 61, paid: false],
-		[user_id: 1, product_id: 57, paid: false],
-		[user_id: 39, product_id: 28, paid: true],
-		[user_id: 25, product_id: 88, paid: false],
-		[user_id: 47, product_id: 52, paid: false],
-		[user_id: 1, product_id: 42, paid: false],
-		[user_id: 26, product_id: 97, paid: true],
-		[user_id: 29, product_id: 24, paid: false],
-		[user_id: 19, product_id: 48, paid: true],
-		[user_id: 5, product_id: 60, paid: true],
-		[user_id: 45, product_id: 74, paid: true],
-		[user_id: 25, product_id: 97, paid: true],
-		[user_id: 37, product_id: 71, paid: false],
-		[user_id: 30, product_id: 18, paid: false],
-		[user_id: 7, product_id: 6, paid: true],
-		[user_id: 38, product_id: 9, paid: true],
-		[user_id: 36, product_id: 56, paid: true],
-		[user_id: 34, product_id: 17, paid: true],
-		[user_id: 19, product_id: 90, paid: true],
-		[user_id: 7, product_id: 16, paid: true],
-		[user_id: 6, product_id: 43, paid: true],
-		[user_id: 15, product_id: 22, paid: false],
-		[user_id: 1, product_id: 60, paid: true],
-		[user_id: 9, product_id: 65, paid: true],
-		[user_id: 35, product_id: 21, paid: true],
-		[user_id: 18, product_id: 62, paid: false],
-		[user_id: 1, product_id: 36, paid: false],
-		[user_id: 30, product_id: 26, paid: false],
-		[user_id: 12, product_id: 82, paid: false],
-		[user_id: 34, product_id: 30, paid: false],
-		[user_id: 18, product_id: 86, paid: true],
-		[user_id: 12, product_id: 77, paid: true],
-		[user_id: 12, product_id: 37, paid: false],
-		[user_id: 31, product_id: 12, paid: false],
-		[user_id: 6, product_id: 28, paid: false],
-		[user_id: 13, product_id: 68, paid: false],
-		[user_id: 41, product_id: 81, paid: true],
-		[user_id: 6, product_id: 87, paid: false],
-		[user_id: 21, product_id: 10, paid: false],
-		[user_id: 28, product_id: 53, paid: true],
-		[user_id: 30, product_id: 22, paid: false],
-		[user_id: 47, product_id: 24, paid: false],
-		[user_id: 22, product_id: 84, paid: false],
-		[user_id: 21, product_id: 88, paid: false],
-		[user_id: 39, product_id: 81, paid: true],
-		[user_id: 42, product_id: 15, paid: false],
-		[user_id: 25, product_id: 31, paid: true],
-		[user_id: 1, product_id: 6, paid: false],
-		[user_id: 11, product_id: 82, paid: true],
-		[user_id: 8, product_id: 64, paid: false],
-		[user_id: 50, product_id: 16, paid: true],
-		[user_id: 17, product_id: 9, paid: false],
-		[user_id: 41, product_id: 36, paid: true],
-		[user_id: 23, product_id: 18, paid: true],
-		[user_id: 32, product_id: 64, paid: true],
-		[user_id: 2, product_id: 73, paid: true],
-		[user_id: 24, product_id: 52, paid: true],
-		[user_id: 22, product_id: 12, paid: true],
-		[user_id: 17, product_id: 32, paid: true],
-		[user_id: 32, product_id: 76, paid: true],
-		[user_id: 20, product_id: 95, paid: false],
-		[user_id: 36, product_id: 33, paid: true],
-		[user_id: 18, product_id: 52, paid: false],
-		[user_id: 24, product_id: 34, paid: true],
-		[user_id: 21, product_id: 48, paid: false],
-		[user_id: 9, product_id: 65, paid: false],
-		[user_id: 7, product_id: 67, paid: true],
-		[user_id: 22, product_id: 54, paid: false],
-		[user_id: 18, product_id: 40, paid: false],
-		[user_id: 6, product_id: 11, paid: true],
-		[user_id: 29, product_id: 34, paid: true],
-		[user_id: 39, product_id: 11, paid: true],
-		[user_id: 16, product_id: 60, paid: false],
-		[user_id: 19, product_id: 11, paid: false],
-		[user_id: 31, product_id: 38, paid: false],
-		[user_id: 18, product_id: 58, paid: true],
-		[user_id: 7, product_id: 16, paid: false],
-		[user_id: 12, product_id: 85, paid: false],
-		[user_id: 32, product_id: 95, paid: false],
-		[user_id: 24, product_id: 45, paid: false],
-		[user_id: 50, product_id: 80, paid: false],
-		[user_id: 5, product_id: 66, paid: true],
-		[user_id: 27, product_id: 56, paid: false],
-		[user_id: 36, product_id: 95, paid: false],
-		[user_id: 3, product_id: 32, paid: true]
-]
-
 productsData.forEach {
 	sql.executeInsert("""
 INSERT INTO products(name, department, price, weight) values (${it.name}, ${it.department}, ${Double.parseDouble(it.price)}, ${Double.parseDouble(it.weight)})
@@ -651,8 +54,8 @@ INSERT INTO products(name, department, price, weight) values (${it.name}, ${it.d
 
 usersData.forEach {
 	sql.executeInsert("""
-		INSERT INTO users (first_name, last_name) values (${it.first_name}, ${it.last_name})
-	""")
+	INSERT INTO users (first_name, last_name) values (${it.first_name}, ${it.last_name})
+""")
 }
 
 ordersData.forEach {
@@ -661,16 +64,138 @@ ordersData.forEach {
 """)
 }
 
+println(" Start of a new table ".center(50, '='))
 sql.eachRow("""
-	SELECT paid, count(*) as numbers FROM orders Group BY paid;
+	SELECT paid, count(*) as numbers FROM warehouse.orders Group BY paid;
 """, {
 	println("Paid status of ${it.paid} for a total of ${it.numbers} orders.")
 })
+println(" End of table ".center(50, "+"))
 
+println(" Start of a new table ".center(50, '='))
 sql.eachRow("""
-SELECT first_name, last_name, paid from users left join orders on users.id = orders.user_id;
+	SELECT u.first_name, u.last_name, o.paid from warehouse.users u left join warehouse.orders o on u.id = o.user_id;
 """, {
 	println("User Name ${it.first_name} ${it.last_name} has paid? ${it.paid}")
 })
+println(" End of table ".center(50, "+"))
+
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+	SELECT distinct * from warehouse.products order by price;
+""", {
+	println("| ${it.id} |\t ${it.name} \t|\t ${it.department} \t|\t ${it.price} \t|\t ${it.weight} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+	SELECT * from warehouse.products order by id limit 10 offset 50;
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.department} \t|\t ${it.price} \t|\t ${it.weight} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+	SELECT id, name, (products.price / products.weight) as PWRatio from warehouse.products order by (products.price / products.weight) desc limit 4;
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.PWRatio} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+//Union - removes duplicated rows from the final result set, where as Union All just concatenates the two result sets
+//Union requires the result set to strictly have same column names and column types
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+(SELECT id, name, price as PWRatio from warehouse.products order by price desc limit 4)
+UNION
+(SELECT id, name, (products.price / products.weight) as PWRatio from warehouse.products order by (products.price / products.weight) desc limit 4)
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.PWRatio} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+//Intersect - shows the 'intersection' of the two result sets, same type and name conditions of columns apply
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+(SELECT * from warehouse.products order by price desc limit 4)
+INTERSECT ALL
+(SELECT * from warehouse.products order by (products.price / products.weight) desc limit 4)
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.department} \t|\t ${it.price} \t|\t ${it.weight} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+println(" Start of a new table ".center(50, '='))
+sql.eachRow("""
+(SELECT * from warehouse.products order by (products.price / products.weight) desc limit 6)
+Except
+(SELECT * from warehouse.products order by price desc limit 4)
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.department} \t|\t ${it.price} \t|\t ${it.weight} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+println(" Table items expensive than all toys ".center(50, '='))
+sql.eachRow("""
+SELECT * from warehouse.products where price > (
+select max(price) from warehouse.products where department = 'Toys'
+);
+""", {
+	println("| ${it.id} |\t ${it.name} \t\t\t\t| ${it.department} \t|\t ${it.price} \t|\t ${it.weight} \t|")
+})
+println(" End of table ".center(50, "+"))
+
+//For any subquery in the 'From' clause, always use Alias, no specific use as such, just the language requirement
+tableEncapsulate("Table - Subquery", 50, "+")
+sql.eachRow("""
+	select name, price_weight_ratio from
+	(SELECT name, price / weight AS price_weight_ratio from products) AS p
+	where price_weight_ratio > 5;
+""", {
+	println("Name ${it.name} \t| price_weight_ratio ${it.price_weight_ratio} \t|")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Subquery - Table Demo", 60, "=")
+sql.eachRow("""
+select AVG(number_of_orders) as average_orders from
+(select user_id, count(user_id) AS number_of_orders from orders GROUP BY user_id) as p;
+""", {
+	println("Average orders placed by users ${integerFormat.format(it.average_orders)}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Subquery In A Join - Table", 60, "=")
+sql.eachRow("""
+select first_name from users
+    join (select user_id from orders where product_id = 3) as p
+on users.id = p.user_id;
+""", {
+	println("First Name for product_id 3 orders ${it.first_name}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Subquery In A Where Clause - Table", 60, "=")
+sql.eachRow("""
+select id, count(id) AS countNumber from orders
+    where product_id IN (SELECT id from products where price / weight < 5)
+group by id;
+""", {
+	println("ID ${it.id}, total count ${it.countNumber}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Subquery In A Where Clause - Table", 60, "=")
+sql.eachRow("""
+select name from products
+ where price > (select avg(price) as average_price from products)
+""", {
+	println("${it.name}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+
 
 sql.close()
