@@ -661,9 +661,16 @@ ordersData.forEach {
 """)
 }
 
+sql.eachRow("""
+	SELECT paid, count(*) as numbers FROM orders Group BY paid;
+""", {
+	println("Paid status of ${it.paid} for a total of ${it.numbers} orders.")
+})
 
+sql.eachRow("""
+SELECT first_name, last_name, paid from users left join orders on users.id = orders.user_id;
+""", {
+	println("User Name ${it.first_name} ${it.last_name} has paid? ${it.paid}")
+})
 
-
-
-
-
+sql.close()
