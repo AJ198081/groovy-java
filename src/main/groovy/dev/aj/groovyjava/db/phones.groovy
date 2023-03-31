@@ -1,6 +1,7 @@
 package dev.aj.groovyjava.db
 import groovy.sql.Sql
 import java.text.DecimalFormat
+import java.text.NumberFormat
 
 def decimalFormat = new DecimalFormat("#,###.00")
 def dbConnection = [url: 'jdbc:postgresql://localhost:5432/postgres', userName: 'admin', password: 'password', driverClassName: 'org.postgresql.Driver']
@@ -14,13 +15,13 @@ drop table if exists phones;
 create table phones(
     name varchar(25),
     manufacturer varchar(25),
-    price integer,
+    price float,
     units_sold integer
 );
 """)
 
 def data = [
-        [name: 'N1280', manufacturer: 'Nokia', price: 199, units_sold: 1925],
+        [name: 'N1280', manufacturer: 'Nokia', price: 199.50, units_sold: 1925],
         [name: 'iPhone 4', manufacturer: 'Apple', price: 399, units_sold: 9436],
         [name: 'Galaxy S', manufacturer: 'Samsung', price: 299, units_sold: 2359],
         [name: 'S5620', manufacturer: 'Samsung', price: 250, units_sold: 2385],
@@ -90,5 +91,37 @@ sql.eachRow("""
 """, {
     println("${it.manufacturer} \t: made a total of ${decimalFormat.format(it.revenue)}. ")
 })
+
+sql.eachRow("""
+    SELECT * FROM phones order by price desc limit 2 offset 1;
+""", {
+    println("${it.name} : ${it.price}")
+})
+
+sql.eachRow("""
+    SELECT * FROM phones order by price desc;
+""", {
+    println("${it.name} : ${it.price}")
+})
+
+def percentangeFormat = NumberFormat.getPercentInstance(Locale.ENGLISH)
+
+println(" Table to show price_ratio of the phones ".center(60, "-"))
+sql.eachRow("""
+    select name, price, ( cast(price as float ) / (select max(price) from phones)) as price_ratio
+    from phones
+""", {
+    println("${it.name} |\t ${it.price} |\t ${percentangeFormat.format(it.price_ratio)}")
+})
+println " End of Table ".center(60, "-")
+
+println (" Table to show price_ratio of the phones ".center(60, "-"))
+sql.eachRow("""
+    select name, price, ( price / (select max(price) from phones)) as price_ratio
+    from phones
+""", {
+    println("${it.name} |\t ${it.price} |\t ${percentangeFormat.format(it.price_ratio)}")
+})
+println " End of Table ".center(60, "-")
 
 sql.close()
