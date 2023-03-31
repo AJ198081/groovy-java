@@ -9,32 +9,25 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class PrepareData {
 
     public List<LinkedHashMap<String, String>> getProductData() {
         List<LinkedHashMap<String, String>> maps = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(new File("./productsData.txt")))) {
-
-
             maps = br.lines()
                     .map(line -> line.substring(1, line.length() - 2))
                     .map(line -> line.split(", "))
                     .map(this::getProductFromString)
                     .toList();
-
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-
         return maps;
     }
-
 
     private LinkedHashMap<String, String> getProductFromString(String[] listItem) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
@@ -44,5 +37,4 @@ public class PrepareData {
         map.put("weight", listItem[3]);
         return map;
     }
-
 }
