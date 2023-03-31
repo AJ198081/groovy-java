@@ -40,3 +40,19 @@ sql.eachRow("SELECT url, contents, username from comments join photos p on p.id 
 private printEndOfTable(int numberOfChars, String padding) {
 	println(" End of Table ".center(numberOfChars, padding))
 }
+
+println(" Group By Example ".center(60, '+'))
+
+sql.eachRow("SELECT user_id, count(user_id) as numberOfUsers from photos GROUP BY user_id order by user_id", {
+	// if user_id is null then the count will be '0'
+	println("User ID ${it.user_id} has \t: ${it.numberOfUsers} instance/s in the photos table".center(50))
+})
+
+println(" Better Version ".center(60, '-'))
+// Better version to ensure we count all instances is count(*)
+sql.eachRow("SELECT user_id, username, count(*) as numberOfUsers from photos left join users u on u.id = photos.user_id where user_id > 2 GROUP BY user_id, username HAVING user_id is not null AND count(*) >= 2 order by username desc", {
+	// if user_id is null then the count will be '0'
+	println("User ${it.username} with ID ${it.user_id} has \t: ${it.numberOfUsers} instance/s in the photos table".center(50))
+})
+
+printEndOfTable(60, '+')
