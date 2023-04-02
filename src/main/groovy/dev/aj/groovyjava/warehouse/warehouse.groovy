@@ -248,6 +248,43 @@ select name, id as product_id, (select count(product_id) as count from orders wh
 })
 tableEncapsulate("End Table", 50, "+")
 
+tableEncapsulate("Distinct function", 60, "=")
+sql.eachRow("""
+SELECT DISTINCT name FROM products;
+""", {
+	println("${it.name}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+// Postgres in-built functions Greatest and Least
+tableEncapsulate("Greatest function", 60, "=")
+sql.eachRow("""
+SELECT DISTINCT name, weight, GREATEST(weight * 2, 30) as shipping_weight FROM products;
+""", {
+	println("${it.name}: ${it.weight} : ${it.shipping_weight}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Least function", 60, "=")
+sql.eachRow("""
+SELECT DISTINCT name, weight, GREATEST(weight* 2, 30) AS min_shipping_weight, LEAST(GREATEST(weight * 4, 30), 60) as max_shipping_weight FROM products;
+""", {
+	println("${it.name} : ${it.weight} : ${it.min_shipping_weight} : ${it.max_shipping_weight}")
+})
+tableEncapsulate("End Table", 50, "+")
+
+tableEncapsulate("Case function", 60, "=")
+sql.eachRow("""
+SELECT DISTINCT name, weight, CASE
+    when weight < 30 then weight * 2
+    when weight >= 30 then 60
+    END AS calculated_shipping_weight
+FROM products order by weight;
+""", {
+	println("${it.name} : ${it.weight} : ${it.calculated_shipping_weight}")
+})
+tableEncapsulate("End Table", 50, "+")
+
 
 
 sql.close()
