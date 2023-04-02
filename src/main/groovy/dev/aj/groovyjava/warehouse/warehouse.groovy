@@ -5,7 +5,7 @@ import groovy.sql.Sql
 
 import java.text.NumberFormat
 
-def credentials = DBConnectionProperties.getConnectionCredentials()
+def credentials = DBConnectionProperties.getConnectionCredentials("postgres", "warehouse")
 
 def usersData = DataBase.getUserData()
 def productsData = new PrepareData().getProductData()
@@ -17,7 +17,8 @@ void tableEncapsulate(String textContents, Integer characterWidth, String paddin
 	def textBody = new StringBuffer().append(' ').append(textContents).append(' ')
 	println(textBody.center(characterWidth, paddingCharacter))
 }
-def sql = Sql.newInstance(credentials.url.concat('?currentSchema=warehouse'), credentials.userName, credentials.password, credentials.driverClassName)
+//def sql = Sql.newInstance(credentials.url.concat('?currentSchema=warehouse'), credentials.userName, credentials.password, credentials.driverClassName)
+def sql = Sql.newInstance(credentials.url, credentials.userName, credentials.password, credentials.driverClassName)
 println('Connected')
 
 sql.execute("""
