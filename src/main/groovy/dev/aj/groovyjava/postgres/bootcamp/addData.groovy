@@ -25,10 +25,3 @@ watch.stop()
 def rows = sql.rows("select * from business.trades")
 
 println("Data has been updated; ${rows.size()} added. ${TimeUnit.MILLISECONDS.convert(watch.nanoTime, TimeUnit.NANOSECONDS)} milli-seconds taken.")
-
-
-
-
-
-
-
