@@ -19,7 +19,7 @@ class DBConnectionProperties {
 
     static Sql getConnection() {
         def dataSourceMap = new LinkedHashMap<String, String>()
-        dataSourceMap.put("url", 'jdbc:postgresql://localhost:5432/admin')
+        dataSourceMap.put("url", 'jdbc:postgresql://localhost:5432/postgres_db')
         dataSourceMap.put("user", 'admin')
         dataSourceMap.put("password", 'password')
         dataSourceMap.put('driverClassName', 'org.postgresql.Driver')

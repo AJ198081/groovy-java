@@ -1,0 +1,29 @@
+services:
+  database:
+    image: postgres
+    container_name: postgres-dc
+    volumes:
+      - type: bind
+        source: /c/Users/amarj/Desktop/postgres_db-data
+        target: /var/lib/postgresql
+#      - db-data:/var/lib/postgresql
+#        source: /var/lib/postgresql
+#        target: C:/Users/amarj/Desktop/postgres_db
+#      - type: volume
+#        source: db-data
+#        target: /var/lib/postgresql/data
+    ports:
+      - 0.0.0.0:5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres_db
+
+#volumes:
+#  db-data:
+#    driver: C
+#    driver_opts:
+#
+#    external:
+#      name: db-data-system
+
