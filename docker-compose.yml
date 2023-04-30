@@ -4,7 +4,7 @@ services:
     container_name: postgres-dc
     volumes:
       - type: bind
-        source: C://Users/amarj/Desktop/postgres_db-data
+        source: /C://Users/amarj/Desktop/postgres_db-data
         target: /var/lib/postgresql/data
 #      - db-data:/var/lib/postgresql
 #        source: /var/lib/postgresql
@@ -26,4 +26,3 @@ services:
 #
 #    external:
 #      name: db-data-system
-:q1d
